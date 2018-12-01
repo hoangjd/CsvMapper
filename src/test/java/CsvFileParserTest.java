@@ -22,8 +22,8 @@ public class CsvFileParserTest {
             ",,2c,3c,4c,5c,6c,7c,8c,9c,10c\n";
 
     String validString = "a,b,c,d,e,f,g,h,i,j\n" +
-            "1,2,3,4,5,6,7,8,9,\"10,\"\n" +
-            "1d,2d,3d,4d,5d,6d,7d,8d,9d,10d\n";
+            "1,2,3,4,5,6,7,8,9,\"10,\"\n";
+
 
 
     @Before
@@ -66,11 +66,21 @@ public class CsvFileParserTest {
         File invalidFile = new File(testCsvFile.getParent() + "/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
         File validFile = new File(testCsvFile.getParent() + "/validCsv.csv");
         try {
-            assertEquals("String and file contents do not match", FileUtils.readFileToString(validFile, "utf-8"), validString);
-            assertEquals("String and file contents do not match", FileUtils.readFileToString(invalidFile, "utf-8"), invalidString);
+            assertEquals("String and file contents do not match", validString, FileUtils.readFileToString(validFile, "utf-8"));
+            assertEquals("String and file contents do not match", invalidString, FileUtils.readFileToString(invalidFile, "utf-8"));
         } catch (IOException e) {
             System.out.println("IOException hit in method validateFileContentsTest");
         }
     }
+
+    @Test
+    public void checkForCorrectCounts() {
+        app.separateValidCSVFromInvalidCSV(parser);
+        assertEquals(2, parser.getSuccessfulRecords());
+        assertEquals(3,parser.getUnsuccessfulRecords());
+        assertEquals(5,parser.getAllRecords());
+    }
+
+
 
 }

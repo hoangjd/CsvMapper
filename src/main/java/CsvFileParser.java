@@ -38,15 +38,10 @@ public class CsvFileParser {
             while(line != null) {
                 if (offset <= 0) {
                     String[] record = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                    if (isValidRecord(record)) {
-                        try {
-                            database.addrecord(record);
-                        }catch (Exception e) {
-                            System.out.println("Error occured during adding record");
-                        }
+                    if (isValidRecord(record) && record.length == 10) {
                         successfulRecords++;
                         validPrintWriter.println(line);
-                    } else if (!isValidRecord(record)) {
+                    } else if (!isValidRecord(record) || record.length != 10) {
                         unsuccessfulRecords++;
                         invalidPrintWriter.println(line);
                     }

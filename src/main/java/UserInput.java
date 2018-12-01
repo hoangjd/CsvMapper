@@ -1,13 +1,14 @@
 import java.io.File;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class UserInput {
 
     private static File file;
 
     public UserInput(){
-
+//        file = new File ("/Users/Joe/source/ms3Interview.csv");
     }
 
     public File askForFile() {
@@ -19,8 +20,9 @@ public class UserInput {
         while(!file.exists()) {
             System.out.println("Please input path of csv file");
             scanner = new Scanner(System.in);
-            this.file = new File(scanner.next());
+            file = new File(scanner.next());
         }
+        this.file = file;
         return file;
     }
 
@@ -44,7 +46,7 @@ public class UserInput {
     }
 
     public File getFile() {
-        return this.file;
+        return file;
     }
 
 }

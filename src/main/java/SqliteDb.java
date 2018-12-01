@@ -21,12 +21,15 @@ public class SqliteDb {
         initialize();
     }
 
-    private void initialize() throws SQLException {
+    private void initialize() throws SQLException, ClassNotFoundException {
         if (!hasData) {
             hasData = true;
             Statement state = conn.createStatement();
-            ResultSet res = state.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='ourTable'");
-            if(!res.next()) {
+//            if(isTable()){
+//                deleteTable();
+//            }
+//            ResultSet res = state.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='ourTable'");
+            if(!isTable()) {
                 System.out.println("Building sql table");
                 Statement createTableStatement = conn.createStatement();
                 createTableStatement.execute("CREATE TABLE ourTable ("
@@ -66,4 +69,28 @@ public class SqliteDb {
         prep.setString(10,values[9]);
         prep.execute();
     }
+
+    private boolean isTable() throws SQLException {
+        Statement statement = conn.createStatement();
+        ResultSet res = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='ourTable'");
+        if(!res.next()) {
+            return false;
+        }
+        return true;
+    }
+
+    public void deleteTable() throws SQLException {
+        if(isTable()) {
+            Statement deleteState = conn.createStatement();
+            String sqlCommand = "DROP TABLE 'ourTable' ";
+            deleteState.executeUpdate(sqlCommand);
+        }
+    }
+
+    public void closeConn()throws SQLException{
+        conn.close();
+    }
+
+
+
 }

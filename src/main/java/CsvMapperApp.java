@@ -3,10 +3,14 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.logging.Logger;
+
 
 public class CsvMapperApp {
 
-    public static void main(String[] args) {
+    final static Logger logger = Logger.getLogger("CsvMapperApp.class");
+
+    public static void main(String[] args) throws Exception {
 
         CsvFileParser parser = initParser();
         separateValidCSVFromInvalidCSV(parser);
@@ -15,13 +19,10 @@ public class CsvMapperApp {
         System.out.println(parser.getUnsuccessfulRecords());
 
         SqliteDb db = new SqliteDb();
-        ResultSet rs;
-        try {
-            rs = db.displayItems();
-            System.out.println(rs.getString("a"));
-        } catch (SQLException  | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        AddRecords add = new AddRecords();
+        add.addRecordsToTable();
+        db.closeConn();
+
 
     }
 
@@ -31,7 +32,14 @@ public class CsvMapperApp {
 
 //        File file = new File("/Users/Joe/source/ms3Interview.csv");
         CsvFileParser parser = new CsvFileParser(input.askForFile(), input.askForOffset());
+//        CsvFileParser parser = new CsvFileParser(new File ("/Users/Joe/source/ms3Interview.csv"), 0);
         return parser;
+    }
+
+    private static void log(CsvFileParser parser) {
+        logger.info("All csv values:" + String.valueOf(parser.getAllRecords()));
+        logger.info("Successful csv values:" + String.valueOf(parser.getSuccessfulRecords()));
+        logger.info("Unsuccessful csv values:" + String.valueOf(parser.getUnsuccessfulRecords()));
     }
 
     protected static void separateValidCSVFromInvalidCSV(CsvFileParser parser) {

@@ -11,10 +11,12 @@ public class CsvFileParser {
     private int allRecords = 0;
     private int offset;
     private CurrentTime currentTime = new CurrentTime();
+    private SqliteDb database;
 
     public CsvFileParser(File file, int offset) {
         this.csvFile = file;
         this.offset = offset;
+        database = new SqliteDb();
     }
 
     //Lots going on here trying to reduce this to smaller methods will result in large method signatures which isn't much better
@@ -36,10 +38,15 @@ public class CsvFileParser {
             while(line != null) {
                 if (offset <= 0) {
                     String[] record = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                    if (!isEmptyString(record)) {
+                    if (isValidRecord(record)) {
+                        try {
+                            database.addrecord(record);
+                        }catch (Exception e) {
+                            System.out.println("Error occured during adding record");
+                        }
                         successfulRecords++;
                         validPrintWriter.println(line);
-                    } else if (isEmptyString(record)) {
+                    } else if (!isValidRecord(record)) {
                         unsuccessfulRecords++;
                         invalidPrintWriter.println(line);
                     }
@@ -69,12 +76,15 @@ public class CsvFileParser {
         return validCsv;
     }
 
-    private boolean isEmptyString(String[] record) {
+    private boolean isValidRecord(String[] record) {
+        if (record.length != 10) {
+            return false;
+        }
         for(int i = 0; i < record.length; i++) {
             if (record[i].equals(""))
-                return true;
+                return false;
         }
-        return false;
+        return true;
     }
 
 

@@ -16,8 +16,8 @@ public class UserInput {
         System.out.println("Please input path of csv file");
         File file = new File(scanner.next());
 
-        while(!file.exists() && !file.isDirectory()) {
-            System.out.println("Please input path of csv file");
+        while(!file.exists() && file.isDirectory()) {
+            System.out.println("Not a valid file. Please input path of csv file");
             scanner = new Scanner(System.in);
             file = new File(scanner.next());
         }
@@ -37,7 +37,7 @@ public class UserInput {
         }
 
         while(!scanner.hasNextInt() && scanner.nextInt() >= 0) {
-            System.out.println("Not an int! Please input number of header rows to skip");
+            System.out.println("Not an int. Please input number of header rows to skip");
             scanner = new Scanner(System.in);
             if (scanner.hasNextInt()) {
                 offset = scanner.nextInt();

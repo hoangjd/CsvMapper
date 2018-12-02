@@ -9,18 +9,16 @@ public class CsvFileParser {
     private int unsuccessfulRecords = 0;
     private int allRecords = 0;
     private int offset;
-    private CurrentTime currentTime = new CurrentTime();
-    private SqliteDb database;
 
     public CsvFileParser(File file, int offset) {
         this.csvFile = file;
         this.offset = offset;
-        database = new SqliteDb();
     }
 
     public File createFileBasedOnCsvValidity() throws IOException {
 
         //initialize necessary tools for writing to files
+        CurrentTime currentTime = new CurrentTime();
         File validCsv = new File(csvFile.getParent() + "/validCsv.csv");
         File invalidCsv = new File(csvFile.getParent() + "/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
         BufferedReader br = null;

@@ -7,6 +7,9 @@ To build and execute this project:
 4. copy the snapshot jar with dependencies to whatever directory you want.
 5. run the jar file.
 
+How it works:
+This software iterates through a csv file, parsing it line by line. At each iteration, a new string array is created and investigated to determine whether or not the csv line is valid. Once validity is determined the string will be written in one of two files (badData file or valid file) and log statistics will be incremented. From there the program will create a database with a table named csvMapping. The program will then iterate through the valid csv file, parsing line by line, adding a parsed string array by index into the appropriate columns of the table.     
+
 User Notes:
 - When asked to input path of csv file you must specify the absolute path.
 - When asked to input header rows skiped. Enter 0 to read the entire file otherwise enter x > 0 to skip x header rows.

@@ -4,7 +4,6 @@ import java.sql.*;
 
 public class SqliteDb {
     private static Connection conn;
-    private static boolean hasData = false;
 
     private void getConnection() throws SQLException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
@@ -18,10 +17,9 @@ public class SqliteDb {
 
     private void initialize() throws SQLException, ClassNotFoundException {
             if(!isTable()) {
-                hasData = true;
-                System.out.println("Building sql table");
+                System.out.println("Building sql table...");
                 Statement createTableStatement = conn.createStatement();
-                createTableStatement.execute("CREATE TABLE ourTable ("
+                createTableStatement.execute("CREATE TABLE csvMapping ("
                                             + "a varchar(1000),"
                                             + "b varchar(1000),"
                                             + "c varchar(1000),"
@@ -39,22 +37,16 @@ public class SqliteDb {
     }
 
     public void addrecord(String[] values) throws SQLException, ClassNotFoundException {
-        if (conn == null || !hasData) {
-            if (conn != null) {
-                conn.close();
-            }
-            if (hasData) {
-                getNewConnection();
-            } else {
-                getConnection();
-            }
+        if (conn == null) {
+            getConnection();
         }
 
         if (values.length != 10) {
             System.out.println("Invalid Value");
             return;
         }
-        PreparedStatement prep = conn.prepareStatement("INSERT INTO ourTable values(?,?,?,?,?,?,?,?,?,?);");
+
+        PreparedStatement prep = conn.prepareStatement("INSERT INTO csvMapping values(?,?,?,?,?,?,?,?,?,?);");
         prep.setString(1,values[0]);
         prep.setString(2,values[1]);
         prep.setString(3,values[2]);
@@ -67,16 +59,19 @@ public class SqliteDb {
         prep.setString(10,values[9]);
         prep.execute();
         prep.close();
+
     }
 
     private boolean isTable() throws SQLException {
         boolean hasTable;
         Statement statement = conn.createStatement();
-        ResultSet res = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='ourTable'");
+        ResultSet res = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='csvMapping'");
+
         if(!res.next())
             hasTable = false;
         else
             hasTable = true;
+
         res.close();
         statement.close();
         return hasTable;
@@ -88,10 +83,9 @@ public class SqliteDb {
             }
             if (isTable()) {
                 Statement deleteState = conn.createStatement();
-                String sqlCommand = "DROP TABLE 'ourTable' ";
+                String sqlCommand = "DROP TABLE 'csvMapping' ";
                 deleteState.executeUpdate(sqlCommand);
                 deleteState.close();
-                hasData = false;
             }
     }
 

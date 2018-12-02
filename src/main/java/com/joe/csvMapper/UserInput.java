@@ -31,14 +31,18 @@ public class UserInput {
         System.out.println("Please input number of header rows to skip");
 
         if (scanner.hasNextInt()) {
-            return scanner.nextInt();
+            offset = scanner.nextInt();
+            if (offset >= 0)
+                return offset;
         }
 
-        while(!scanner.hasNextInt()) {
+        while(!scanner.hasNextInt() && scanner.nextInt() >= 0) {
             System.out.println("Not an int! Please input number of header rows to skip");
             scanner = new Scanner(System.in);
             if (scanner.hasNextInt()) {
                 offset = scanner.nextInt();
+                if (offset >= 0)
+                    return offset;
             }
         }
         return offset;

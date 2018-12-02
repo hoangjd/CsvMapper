@@ -1,37 +1,13 @@
 package com.joe.csvMapper;
 
-import java.io.FileNotFoundException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.*;
 
 public class SqliteDb {
     private static Connection conn;
     private static boolean hasData = false;
 
-    public ResultSet displayItems() throws SQLException, ClassNotFoundException {
-        if (conn == null) {
-            getConnection();
-        }
-
-        Statement state = conn.createStatement();
-        ResultSet res = state.executeQuery("SELECT a FROM ourTable");
-        return res;
-    }
-
     private void getConnection() throws SQLException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
-
-        //could not get database to work when packaging to jar
-//        URL url = SqliteDb.class.getClassLoader().getResource("database.db");
-//        String path = "";
-//        try {
-//            path = url.toURI().toString();
-//        } catch (URISyntaxException e) {
-//            System.out.println("could not convert path to uri");
-//        }
-//        System.out.println(path);
         conn = DriverManager.getConnection("jdbc:sqlite:database.db");
         initialize();
     }
@@ -48,7 +24,7 @@ public class SqliteDb {
                                             + "b varchar(1000),"
                                             + "c varchar(1000),"
                                             + "d varchar(1000),"
-                                            + "e varchar(1000),"
+                                            + "e varchar(4000),"
                                             + "f varchar(1000),"
                                             + "g varchar(1000),"
                                             + "h varchar(1000),"
@@ -90,13 +66,6 @@ public class SqliteDb {
         return true;
     }
 
-    public void deleteTable() throws SQLException {
-        if(isTable()) {
-            Statement deleteState = conn.createStatement();
-            String sqlCommand = "DROP TABLE 'ourTable' ";
-            deleteState.executeUpdate(sqlCommand);
-        }
-    }
 
     public void closeConn()throws SQLException{
         conn.close();

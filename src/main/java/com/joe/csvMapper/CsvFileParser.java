@@ -18,7 +18,8 @@ public class CsvFileParser {
         database = new SqliteDb();
     }
 
-    public File validCsvFile() throws IOException {
+    public File createFileBasedOnCsvValidity() throws IOException {
+
         //initialize necessary tools for writing to files
         File validCsv = new File(csvFile.getParent() + "/validCsv.csv");
         File invalidCsv = new File(csvFile.getParent() + "/bad-data-<" + currentTime.getCurrentTime() + ">.csv");

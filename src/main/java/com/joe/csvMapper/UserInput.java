@@ -1,9 +1,7 @@
 package com.joe.csvMapper;
 
 import java.io.File;
-import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class UserInput {
 

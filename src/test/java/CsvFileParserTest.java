@@ -42,7 +42,7 @@ public class CsvFileParserTest {
 
     @After
     public void after() {
-        File badFile = new File(testCsvFile.getParent() + "/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
+        File badFile = new File(testCsvFile.getParent() + "/badDataFiles/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
         File validFile = new File(testCsvFile.getParent() + "/validCsv.csv");
 
         if (badFile.exists()) {
@@ -56,7 +56,7 @@ public class CsvFileParserTest {
     @Test
     public void validCsvFileTestFileCreation() {
         app.separateValidCSVFromInvalidCSV(parser);
-        File invalidFile = new File(testCsvFile.getParent() + "/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
+        File invalidFile = new File(testCsvFile.getParent() + "/badDataFiles/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
         File validFile = new File(testCsvFile.getParent() + "/validCsv.csv");
         assert(invalidFile.exists());
         assert(validFile.exists());
@@ -66,7 +66,7 @@ public class CsvFileParserTest {
     @Test
     public void validateFileContentsTest() {
         app.separateValidCSVFromInvalidCSV(parser);
-        File invalidFile = new File(testCsvFile.getParent() + "/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
+        File invalidFile = new File(testCsvFile.getParent() + "/badDataFiles/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
         File validFile = new File(testCsvFile.getParent() + "/validCsv.csv");
         try {
             assertEquals("String and file contents do not match", validString, FileUtils.readFileToString(validFile, "utf-8"));

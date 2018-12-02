@@ -19,8 +19,9 @@ public class CsvFileParser {
 
         //initialize necessary tools for writing to files
         CurrentTime currentTime = new CurrentTime();
+        makeBadDataDir();
         File validCsv = new File(csvFile.getParent() + "/validCsv.csv");
-        File invalidCsv = new File(csvFile.getParent() + "/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
+        File invalidCsv = new File(csvFile.getParent() + "/badDataFiles/bad-data-<" + currentTime.getCurrentTime() + ">.csv");
         BufferedReader br = null;
         PrintWriter validPrintWriter = null;
         PrintWriter invalidPrintWriter = null;
@@ -58,6 +59,13 @@ public class CsvFileParser {
             allRecords ++;
         }
         offset --;
+    }
+
+    private void makeBadDataDir() {
+        File makeInvalidDir = new File(csvFile.getParent() + "/badDataFiles");
+        if (!makeInvalidDir.exists()) {
+            makeInvalidDir.mkdir();
+        }
     }
 
     private void closeFiles(BufferedReader br, PrintWriter invalidPrintWriter, PrintWriter validPrintWriter) throws IOException{

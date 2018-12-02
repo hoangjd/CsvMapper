@@ -11,12 +11,14 @@ public class SqliteDb {
         conn = DriverManager.getConnection("jdbc:sqlite:database.db");
         initialize();
     }
+    private void getNewConnection() throws SQLException, ClassNotFoundException {
+        Class.forName("org.sqlite.JDBC");
+        conn = DriverManager.getConnection("jdbc:sqlite:database.db");
+    }
 
     private void initialize() throws SQLException, ClassNotFoundException {
-        if (!hasData) {
-            hasData = true;
-            Statement state = conn.createStatement();
             if(!isTable()) {
+                hasData = true;
                 System.out.println("Building sql table");
                 Statement createTableStatement = conn.createStatement();
                 createTableStatement.execute("CREATE TABLE ourTable ("
@@ -30,13 +32,22 @@ public class SqliteDb {
                                             + "h varchar(1000),"
                                             + "i varchar(1000),"
                                             + "j varchar(1000));");
+            } else {
+                deleteTable();
+                initialize();
             }
-        }
     }
 
     public void addrecord(String[] values) throws SQLException, ClassNotFoundException {
-        if (conn == null) {
-            getConnection();
+        if (conn == null || !hasData) {
+            if (conn != null) {
+                conn.close();
+            }
+            if (hasData) {
+                getNewConnection();
+            } else {
+                getConnection();
+            }
         }
 
         if (values.length != 10) {
@@ -55,15 +66,33 @@ public class SqliteDb {
         prep.setString(9,values[8]);
         prep.setString(10,values[9]);
         prep.execute();
+        prep.close();
     }
 
     private boolean isTable() throws SQLException {
+        boolean hasTable;
         Statement statement = conn.createStatement();
         ResultSet res = statement.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='ourTable'");
-        if(!res.next()) {
-            return false;
-        }
-        return true;
+        if(!res.next())
+            hasTable = false;
+        else
+            hasTable = true;
+        res.close();
+        statement.close();
+        return hasTable;
+    }
+
+    public void deleteTable() throws SQLException, ClassNotFoundException {
+            if (conn != null) {
+                getNewConnection();
+            }
+            if (isTable()) {
+                Statement deleteState = conn.createStatement();
+                String sqlCommand = "DROP TABLE 'ourTable' ";
+                deleteState.executeUpdate(sqlCommand);
+                deleteState.close();
+                hasData = false;
+            }
     }
 
 

@@ -16,7 +16,7 @@ public class UserInput {
         System.out.println("Please input path of csv file");
         File file = new File(scanner.next());
 
-        while(!file.exists()) {
+        while(!file.exists() && !file.isDirectory()) {
             System.out.println("Please input path of csv file");
             scanner = new Scanner(System.in);
             file = new File(scanner.next());
